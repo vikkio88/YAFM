@@ -1,29 +1,52 @@
-const makeRepository = (table, db) => {
-    table = db[table];
-    return {
-        create(object) {
-            return table.add(object);
-        },
-        count() {
-            return table.count();
-        },
-        getAll() {
-            return table.toArray();
-        },
-        delete(id) {
-            return table.where('id').equalsIgnoreCase(id).delete();
-        },
-        deleteAll() {
-            return table.clear();
-        },
-        find(id) {
-            return table.where('id').equalsIgnoreCase(id).toArray();
-        },
-        some(ids = []) {
-            return table.where('id').anyOfIgnoreCase(ids).toArray();
-        }
-    };
+const getEntity = (table, db) => {
+    return new Entity(db, table);
 };
 
+class Entity {
+    db;
+    primaryKey = 'id';
+    tableName;
+    table;
 
-export { makeRepository };
+    constructor(db, tableName) {
+        this.db = db;
+        this.tableName = tableName;
+        this.table = db[tableName];
+    }
+
+
+    create(object) {
+        return this.table.add(object);
+    }
+
+    count() {
+        return this.table.count();
+    }
+
+    getAll() {
+        return this.table.toArray();
+    }
+
+    delete(id) {
+        return this.table.where(this.primaryKey).equalsIgnoreCase(id).delete();
+    }
+
+    deleteAll() {
+        return this.table.clear();
+    }
+
+    find(id) {
+        return this.table.where(this.primaryKey).equalsIgnoreCase(id).toArray();
+    }
+
+    some(ids = []) {
+        return this.table.where(this.primaryKey).anyOfIgnoreCase(ids).toArray();
+    }
+
+    select() {
+        return this.table;
+    }
+}
+
+
+export { getEntity, Entity };

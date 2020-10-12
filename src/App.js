@@ -47,7 +47,7 @@ class App extends Component {
     return (
       <main className="mx-auto h-full w-full border" >
         <Button onClick={this.deleteAll} disabled={!players.length}>Delete all</Button>
-        <Button onClick={this.generate} disabled={players.length}>generate</Button>
+        <Button onClick={this.generate} disabled={players.length}>Generate</Button>
         <pre>
           {JSON.stringify(players, null, 1)}
         </pre>

@@ -5,8 +5,8 @@ const extendedNationalities = {
         currency: '€'
     },
     'en': {
-        name: 'United Kingdom',
-        flag: 'gb',
+        name: 'Egnland',
+        flag: 'en',
         currency: '£'
     },
     /*'ru': {
