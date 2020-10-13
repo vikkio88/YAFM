@@ -37,8 +37,7 @@ export default {
     },
     status() {
         return {
-            morale: randomizer.int(10, 100),
-            injured: false
+            morale: randomizer.int(10, 100)
         };
     },
     statusModifiers() {
@@ -62,9 +61,7 @@ export default {
             id: ulid(),
             name: faker.name(locale),
             surname: faker.surname(locale),
-            team: null,
-            contract: randomizer.int(1, 5),
-            pic: randomizer.int(0, 999)
+            contract: randomizer.int(1, 5)
         };
     },
     coach(forcedValues = {}) {
@@ -81,6 +78,7 @@ export default {
             nationality: locale,
             skill,
             module: this.module(),
+            stats: { history: [], p: 0, w: 0, d: 0, l: 0 },
             wage: coachHelper.calculateWage({ skill, age }),
             ...forcedValues
         };
@@ -95,14 +93,14 @@ export default {
 
         return {
             ...person,
-            status: this.status(),
-            stats: { history: [] },
             age,
             nationality: locale,
             skill,
             value,
             position,
             wage: playerHelper.calculateWage({ age, value }),
+            status: { ...this.status(), injured: false },
+            stats: { played: null, avg: null, goals: null, mvp: null, rates: [], history: [], },
             ...forcedValues
         };
     },
@@ -115,10 +113,10 @@ export default {
         const name = forcedValues.name || this.teamName(nationality);
         const id = ulid();
         const mostPlayers = Math.round(rosterSize * (1 - 0.8));
-        const roster = this.players(mostPlayers, { nationality, team: { id, name } });
-        roster.push(this.player({ position: 'GK', nationality, team: { id, name } }));
+        const roster = this.players(mostPlayers, { nationality });
+        roster.push(this.player({ position: 'GK', nationality }));
         range(rosterSize - mostPlayers).forEach(() => {
-            roster.push(this.player({ nationality: this.nationality(), team: { id, name } }));
+            roster.push(this.player({ nationality: this.nationality() }));
         });
         const coachNationality = randomizer.chance(90) ? nationality : this.nationality();
         return {
@@ -127,9 +125,9 @@ export default {
             colours: this.teamColour(),
             status: this.status(),
             nationality,
-            stats: { positionTrend: [], history: [] },
+            stats: { positionTrend: [], history: [], p: 0, w: 0, d: 0, l: 0 },
             finance: randomizer.int(1, 100) * CURRENCY_MODIFIERS.MILLIONS,
-            coach: this.coach({ nationality: coachNationality, team: name }),
+            coach: this.coach({ nationality: coachNationality }),
             roster
         };
     },
