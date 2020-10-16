@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import generator from 'libs/generator';
-import { entities } from 'db';
+import { repositories } from 'db';
 
 import { Button } from 'components/common';
 
@@ -15,13 +15,13 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    const playersInDb = await entities.players.count();
+    const playersInDb = await repositories.players.count();
     let players = [];
     if (playersInDb > 0) {
-      players = await entities.players.getAll();
+      players = await repositories.players.getAll();
     } else {
       players = generator.players();
-      players.forEach(p => entities.players.create(p));
+      players.forEach(p => repositories.players.create(p));
     }
     console.log('players', players);
     this.setState({ players, loading: false });
@@ -30,14 +30,14 @@ class App extends Component {
 
   deleteAll = async () => {
     this.setState({ loading: true });
-    await entities.players.deleteAll();
+    await repositories.players.deleteAll();
     this.setState({ loading: false, players: [] });
   };
 
   generate = async () => {
     this.setState({ loading: true });
     const players = generator.players();
-    players.forEach(async p => await entities.players.create(p));
+    players.forEach(async p => await repositories.players.create(p));
     this.setState({ loading: false, players: players });
   };
 
@@ -49,7 +49,7 @@ class App extends Component {
         <Button onClick={this.deleteAll} disabled={!players.length}>Delete all</Button>
         <Button onClick={this.generate} disabled={players.length}>Generate</Button>
         <pre>
-          {JSON.stringify(players, null, 1)}
+          {JSON.stringify(repositories.teams.entity.relations(generator.team()), null, 1)}
         </pre>
       </main>
     );

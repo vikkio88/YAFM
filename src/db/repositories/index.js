@@ -1,5 +1,8 @@
-const getEntity = (table, db) => {
-    return new Entity(db, table);
+import { getEntity } from '../entities';
+
+const getRepository = (table, db) => {
+    const entity = getEntity(table);
+    return new Entity(db, table, entity);
 };
 
 class Entity {
@@ -7,11 +10,13 @@ class Entity {
     primaryKey = 'id';
     tableName;
     table;
+    entity;
 
-    constructor(db, tableName) {
+    constructor(db, tableName, entity) {
         this.db = db;
         this.tableName = tableName;
         this.table = db[tableName];
+        this.entity = entity;
     }
 
 
@@ -49,4 +54,4 @@ class Entity {
 }
 
 
-export { getEntity, Entity };
+export { getRepository, Entity };
